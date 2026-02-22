@@ -5,7 +5,7 @@ from typing import List
 class Settings(BaseSettings):
     app_name: str = "TideWatch"
     app_env: str = "development"
-    cors_origins: str = "http://localhost:5173,http://localhost:3000,https://tidewatch.vercel.app,https://tidewatch-git-main-izzytech254s-projects.vercel.app,https://tidewatch-izzytech254s-projects.vercel.app"
+    cors_origins: str = "*"
 
     # NOAA - Sewells Point, Norfolk VA
     noaa_station_id: str = "8638610"

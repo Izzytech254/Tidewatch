@@ -10,9 +10,16 @@ async function fetchWithRetry(url, options = {}, retries = 3, delay = 3000) {
       clearTimeout(timeout);
       return resp;
     } catch (err) {
-      if (i === retries) throw new Error("Server is unavailable. It may be starting up — please try again in 30 seconds.");
+      if (i === retries)
+        throw new Error(
+          "Server is unavailable. It may be starting up — please try again in 30 seconds.",
+        );
       // Dispatch event so UI can show "waking up" message
-      window.dispatchEvent(new CustomEvent("api-retry", { detail: { attempt: i + 1, max: retries } }));
+      window.dispatchEvent(
+        new CustomEvent("api-retry", {
+          detail: { attempt: i + 1, max: retries },
+        }),
+      );
       await new Promise((r) => setTimeout(r, delay));
     }
   }
@@ -42,7 +49,9 @@ export async function getCurrentTides() {
 }
 
 export async function getTidePredictions(hours = 48) {
-  const resp = await fetchWithRetry(`${API_BASE}/tides/predictions?hours=${hours}`);
+  const resp = await fetchWithRetry(
+    `${API_BASE}/tides/predictions?hours=${hours}`,
+  );
   return resp.json();
 }
 
