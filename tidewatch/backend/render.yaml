@@ -8,4 +8,4 @@ services:
       - key: APP_ENV
         value: production
       - key: CORS_ORIGINS
-        value: https://tidewatch.vercel.app,https://tidewatch-*.vercel.app
+        value: https://tidewatch.vercel.app,https://tidewatch-git-main-izzytech254s-projects.vercel.app,https://tidewatch-izzytech254s-projects.vercel.app

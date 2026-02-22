@@ -2,5 +2,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }]
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://tidewatch-api.onrender.com/api/:path*"
+    }
+  ]
 }

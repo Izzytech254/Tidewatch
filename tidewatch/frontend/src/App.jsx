@@ -61,6 +61,7 @@ export default function App() {
   const { theme, toggleTheme } = useTheme();
   const [assessment, setAssessment] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState(0);
   const [error, setError] = useState("");
   const [searchAddress, setSearchAddress] = useState("");
 
@@ -68,13 +69,26 @@ export default function App() {
     setLoading(true);
     setError("");
     setSearchAddress(address);
+    setLoadingStage(0);
+
+    // Simulate progress stages while API works
+    const stageTimer = setInterval(() => {
+      setLoadingStage((prev) => Math.min(prev + 1, 3));
+    }, 1200);
+
     try {
       const result = await assessRisk(address, lat, lng);
+      clearInterval(stageTimer);
+      setLoadingStage(4);
+      // Brief pause to show "complete" state
+      await new Promise((r) => setTimeout(r, 400));
       setAssessment(result);
     } catch (err) {
+      clearInterval(stageTimer);
       setError(err.message);
     } finally {
       setLoading(false);
+      setLoadingStage(0);
     }
   };
 
@@ -195,7 +209,40 @@ export default function App() {
           {loading && (
             <div className="loading">
               <div className="spinner" />
-              <span className="loading-text">Analyzing flood risk...</span>
+              <div className="loading-stages">
+                <div
+                  className={`loading-stage ${loadingStage >= 0 ? "active" : ""} ${loadingStage > 0 ? "done" : ""}`}
+                >
+                  <span className="stage-icon">
+                    {loadingStage > 0 ? "✓" : "🌊"}
+                  </span>
+                  <span>Fetching tide data from NOAA...</span>
+                </div>
+                <div
+                  className={`loading-stage ${loadingStage >= 1 ? "active" : ""} ${loadingStage > 1 ? "done" : ""}`}
+                >
+                  <span className="stage-icon">
+                    {loadingStage > 1 ? "✓" : "⛅"}
+                  </span>
+                  <span>Getting weather forecast...</span>
+                </div>
+                <div
+                  className={`loading-stage ${loadingStage >= 2 ? "active" : ""} ${loadingStage > 2 ? "done" : ""}`}
+                >
+                  <span className="stage-icon">
+                    {loadingStage > 2 ? "✓" : "🏔️"}
+                  </span>
+                  <span>Checking ground elevation...</span>
+                </div>
+                <div
+                  className={`loading-stage ${loadingStage >= 3 ? "active" : ""} ${loadingStage > 3 ? "done" : ""}`}
+                >
+                  <span className="stage-icon">
+                    {loadingStage > 3 ? "✓" : "🧮"}
+                  </span>
+                  <span>Computing risk score...</span>
+                </div>
+              </div>
             </div>
           )}
 
