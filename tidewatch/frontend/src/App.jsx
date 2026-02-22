@@ -62,12 +62,21 @@ export default function App() {
   const [assessment, setAssessment] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState(0);
+  const [serverWaking, setServerWaking] = useState(false);
   const [error, setError] = useState("");
   const [searchAddress, setSearchAddress] = useState("");
+
+  // Listen for cold-start retry events from the API layer
+  useEffect(() => {
+    const handler = () => setServerWaking(true);
+    window.addEventListener("api-retry", handler);
+    return () => window.removeEventListener("api-retry", handler);
+  }, []);
 
   const handleAssess = async (address, lat, lng) => {
     setLoading(true);
     setError("");
+    setServerWaking(false);
     setSearchAddress(address);
     setLoadingStage(0);
 
@@ -209,6 +218,12 @@ export default function App() {
           {loading && (
             <div className="loading">
               <div className="spinner" />
+              {serverWaking && (
+                <div className="server-waking">
+                  <span>☕</span> Waking up server — free tier spins down after
+                  inactivity. Hang tight!
+                </div>
+              )}
               <div className="loading-stages">
                 <div
                   className={`loading-stage ${loadingStage >= 0 ? "active" : ""} ${loadingStage > 0 ? "done" : ""}`}
