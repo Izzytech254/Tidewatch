@@ -124,7 +124,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   transition:
     background var(--transition-speed) ease,
     color var(--transition-speed) ease;
@@ -482,9 +482,10 @@ body {
 .main-layout {
   display: flex;
   flex: 1;
-  overflow: hidden;
   position: relative;
   z-index: 1;
+  height: calc(100vh - 60px);
+  overflow: hidden;
 }
 
 .sidebar {
@@ -1466,18 +1467,27 @@ body {
 @media (max-width: 900px) {
   .main-layout {
     flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 60px);
+    overflow: visible;
   }
   .sidebar {
     width: 100%;
     min-width: unset;
-    max-height: 50vh;
+    max-height: none;
+    height: auto;
+    overflow-y: visible;
     border-right: none;
     border-bottom: 1px solid var(--glass-border);
   }
   .map-container {
     min-height: 50vh;
+    height: 50vh;
   }
   .header-tagline {
     display: none;
+  }
+  body {
+    overflow-y: auto;
   }
 }
